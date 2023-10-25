@@ -1,0 +1,149 @@
+create database QuanLyDeAn;
+create table NHANVIEN (
+MANV VARCHAR (8), 
+HONV VARCHAR(50) not null , 
+TENLOT VARCHAR (50) not null,
+TENNV VARCHAR(50) not null,
+NGSINH datetime ,
+PHAI varchar(5), 
+DCHI varchar (100) , 
+MLUONG float , 
+MA_NQL varchar(8)  , 
+PHONG varchar(4) 
+primary key (MANV)  ,
+) 
+
+create table THANHNHAN (
+MATN int,
+MANV VARCHAR(8), 
+TENTN VARCHAR(50),
+PHAI VARCHAR(8),
+NGSINH DATETIME , 
+QUANHE VARCHAR(30)
+
+PRIMARY KEY (MATN , MANV) , 
+)
+
+create table PHONGBAN (
+MAPHG VARCHAR(4),
+TENPHG VARCHAR(100),
+TRPHG VARCHAR(8),
+NGNC DATETIME 
+PRIMARY KEY (MAPHG) , 
+)
+
+CREATE TABLE PHANCONG(
+MANV VARCHAR(8),
+MADA VARCHAR(6),
+THOGIAN FLOAT 
+PRIMARY KEY (MANV , MADA) ,
+)
+
+CREATE TABLE DEAN (
+MADA VARCHAR(6),
+MAPHG VARCHAR(4),
+TENDA VARCHAR(50),
+DDIEM_DA VARCHAR(100),
+NGBD_PK DATETIME , 
+NGKT_PK DATETIME 
+
+PRIMARY KEY (MADA) ,
+)
+
+CREATE TABLE DIADIEM_PHG (
+MAPHG VARCHAR(4),
+DIADIEM VARCHAR(30)
+
+PRIMARY KEY (MAPHG , DIADIEM ) ,
+)
+
+alter table NHANVIEN ADD 
+CONSTRAINT FK_MANQL FOREIGN KEY(MA_NQL) REFERENCES NHANVIEN(MANV)
+
+alter table NHANVIEN ADD 
+CONSTRAINT FK_PHONG FOREIGN KEY(PHONG) REFERENCES PHONGBAN(MAPHG)
+
+ALTER TABLE THANHNHAN ADD 
+CONSTRAINT FK_MANV FOREIGN KEY(MANV) REFERENCES NHANVIEN(MANV)
+
+ALTER TABLE PHANCONG ADD 
+CONSTRAINT FK_MANVPHANCONG FOREIGN KEY(MANV) REFERENCES NHANVIEN(MANV) ,
+CONSTRAINT FK_MADA FOREIGN KEY(MADA) REFERENCES DEAN(MADA)
+
+ALTER TABLE DIADIEM_PHG ADD 
+CONSTRAINT FK_MAPGHDIADIEM FOREIGN KEY(MAPHG) REFERENCES PHONGBAN(MAPHG)
+
+ALTER TABLE PHONGBAN ADD 
+CONSTRAINT FK_TRPHGNHANVIEN FOREIGN KEY(TRPHG) REFERENCES NHANVIEN(MANV) 
+
+ALTER TABLE DEAN ADD 
+CONSTRAINT FK_MAPHGDA FOREIGN KEY (MAPHG) REFERENCES PHONGBAN(MAPHG) 
+
+/*
+INSERT INTO  PHANCONG
+values( '001' , 'TH001' , 30.0 )
+*/
+
+INSERT INTO [NHANVIEN]([MANV], [HONV], [TENLOT], [TENNV], [NGSINH], [PHAI], [DCHI], [MA_NQL], [PHONG], [MLUONG]) 
+VALUES 
+	('001', 'Vuong', 'Ngoc', 'Quyen', '1957-10-22', 'Nu', '450 Trung Vuong, Ha Noi', NULL, 'QL', 3000000),
+	('002', 'Nguyen', 'Thanh', 'Tung', '1955-01-09', 'Nam', '731 Tran Hung Dao, Q1, TpHCM', '001', 'NC', 2500000),
+	('003', 'Le', 'Thi', 'Nhan', '1960-12-18', 'Nu', '291 Ho Van Hue, QPN, TpHCM', '001', 'DH', 2500000),
+	('004', 'Dinh', 'Ba', 'Tien', '1968-01-09', 'Nam', '638 Nguyen Van Cu, Q5, TpHCM', '002', 'NC', 2200000),
+	('005', 'Bui', 'Thuy', 'Vu', '1972-07-19', 'Nam', '332 Nguyen Thai Hoc, Q1, TphCM', '003', 'DH', 2200000),
+	('006', 'Nguyen', 'Manh', 'Hung', '1973-09-15', 'Nam', '978 Ba Ria, Vung Tau', '002', 'NC', 2000000),
+	('007', 'Tran', 'Thanh', 'Tam', '1975-07-31', 'Nu', '543 Mai Thi Luu, Q1, TpHCM', '002', 'NC', 2200000),
+	('008', 'Tran', 'Hong', 'Van', '1976-07-04', 'Nu', '980 Le Hong Phong, Q10, TpHCM', '004', 'NC', 1800000);
+
+INSERT INTO [PHONGBAN]([MAPHG], [TENPHG], [TRPHG], [NGNC]) 
+VALUES 
+	('QL', 'Quan Ly', '001', '2000-05-22'),
+	('DH', 'Dieu Hanh', '003', '2002-10-10'),
+	('NC', 'Nghieng Cuu', '002', '2002-03-15');
+
+INSERT INTO [DIADIEM_PHG]([MAPHG], [DIADIEM]) 
+VALUES 
+	('NC', 'HANOI'),
+	('NC', 'TPHCM'),
+	('QL', 'TPHCM'),
+	('DH', 'HANOI'),
+	('DH', 'TPHCM'),
+	('DH', 'NHATRANG');
+
+INSERT INTO [PHANCONG]([MANV], [MADA], [THOGIAN]) 
+VALUES 
+	('001', 'TH001', 30.0),
+	('001', 'TH002', 12.5),
+	('002', 'TH001', 10.0),
+	('002', 'TH002', 10.0),
+	('002', 'DT001', 10.0),
+	('002', 'DT002', 10.0),
+	('003', 'TH001', 37.5),
+	('004', 'DT001', 10.0),
+	('004', 'DT002', 10.0),
+	('006', 'DT001', 30.5),
+	('007', 'TH001', 20.0),
+	('007', 'TH002', 10.0),
+	('008', 'TH001', 10.0),
+	('008', 'DT002', 12.5);
+
+INSERT INTO [THANHNHAN]([MATN], [MANV], [TENTN], [PHAI], [NGSINH], [QUANHE]) 
+VALUES 
+	('1', '003', 'Tran Minh Tien', 'Nam', '1990-12-11', 'Con'),
+	('2', '003', 'Tran Ngoc Linh', 'Nu', '1993-03-10', 'Con'),
+	('3', '003', 'Tran Minh Long', 'Nam', '1957-10-10', 'Vo Chong'),
+
+	('1', '001', 'Le Nhat Minh', 'Nam', '1955-04-27', 'Vo Chong'),
+	('1', '002', 'Le Hoai Thuong', 'Nu', '1960-12-05', 'Vo Chong'),
+	('1', '004', 'Le Phi Nhung', 'Nu', '1970-12-23', 'Vo Chong'),
+	('1', '005', 'Tran Thu Hong', 'Nu', '1978-04-11', 'Vo Chong'),
+	('2', '005', 'Nguyen Manh Tam', 'Nam', '2003-01-15', 'Con');
+
+
+
+INSERT INTO [DEAN]([MADA], [MAPHG], [TENDA], [DDIEM_DA], [NGBD_PK], [NGKT_PK]) 
+VALUES 
+	('TH001', 'NC', 'Tin hoc hoa 1', 'HANOI', '2003-02-01', '2004-02-01'),
+	('TH002', 'NC', 'Tin hoc hoa 2', 'TPHCM', '2003-06-04', '2004-02-01'),
+	('DT001', 'DH', 'Dao tao 1', 'NHATRANG', '2002-02-01', '2006-02-01'),
+	('DT002', 'DH', 'Dao tao 2', 'HANOI', '2002-02-01', '2006-02-01');
